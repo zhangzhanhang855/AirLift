@@ -10,26 +10,35 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode.app
-
-      - name: Build App
+      - name: Inspect Makefile Targets
         run: |
-          xcodebuild build \
-            -scheme airlift \
-            -destination 'generic/platform=iOS' \
-            -configuration Release \
-            CODE_SIGNING_ALLOWED=NO \
-            -derivedDataPath build
+          cat Makefile
 
-      - name: Package to IPA
+      - name: Build via Make
         run: |
+          make
+
+      - name: Locate Build Outputs & Package IPA
+        run: |
+          # 檢查 Makefile 生成了什麼（通常在 build/ 或當前目錄）
+          ls -la
+          
           mkdir -p Payload
-          cp -r build/Build/Products/Release-iphoneos/*.app Payload/
-          zip -r airlift-unsigned.ipa Payload
+          # 尋找編譯出來的 .app 或二進制文件
+          APP_DIR=$(find . -maxdepth 3 -name "*.app" -type d | head -n 1)
+          
+          if [ -n "$APP_DIR" ]; then
+            echo "Found app bundle: $APP_DIR"
+            cp -r "$APP_DIR" Payload/
+            zip -r AirLift-unsigned.ipa Payload
+          else
+            echo "No .app bundle found directly, checking build directory..."
+            ls -R
+            exit 1
+          fi
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: airlift-ipa
-          path: airlift-unsigned.ipa
+          name: AirLift-ipa
+          path: AirLift-unsigned.ipa
