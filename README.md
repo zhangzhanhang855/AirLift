@@ -2,7 +2,7 @@
 
 ### An AirTraffic sandbox escape for iOS 27.0.
 
-This is a simple proof-of-concept for developers and security researchers.
+This is a simple proof-of-concept for developers and also for security researchers.
 
 If you are worried about 🔥🪲4⃣☁️ (burning bugs for clout) - there are always more bugs <sub><img src="./assets/trollface.svg" width="22" height="18" alt="trollface"></sub>
 
