@@ -21,3 +21,4 @@ build/airtraffic_host: Sources/airtraffic_host.m | build
 
 clean:
 	rm -rf build
+
